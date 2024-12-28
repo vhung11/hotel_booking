@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
+    @CrossOrigin(origins = "https://frontend-nhom24-web-hust20241.web.app", allowedHeaders = "*")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register (
@@ -31,7 +31,7 @@ public class AuthenticationController {
         return ResponseEntity.accepted().build();
     }
 
-    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
+    @CrossOrigin(origins = "https://frontend-nhom24-web-hust20241.web.app", allowedHeaders = "*")
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody @Valid AuthenticationRequest request
@@ -39,7 +39,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
+    @CrossOrigin(origins = "https://frontend-nhom24-web-hust20241.web.app", allowedHeaders = "*")
     @PostMapping("/verify")
     public ResponseEntity<?> verifyUser(
             @RequestBody VerifyUserRequest request) {
@@ -51,7 +51,7 @@ public class AuthenticationController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
+    @CrossOrigin(origins = "https://frontend-nhom24-web-hust20241.web.app", allowedHeaders = "*")
     @PostMapping("/resend")
     public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
         try {
