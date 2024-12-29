@@ -1,7 +1,8 @@
 package com.demo.hotel_booking.controller;
 
-import com.demo.hotel_booking.dto.request.RoomCreationRequest;
+import com.demo.hotel_booking.dto.request.RoomInfo;
 import com.demo.hotel_booking.entity.Room;
+import com.demo.hotel_booking.security.JwtService;
 import com.demo.hotel_booking.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +20,12 @@ import java.util.List;
 @RequestMapping("/manager/rooms")
 public class RoomController {
     private final RoomService roomService;
+    private final JwtService jwtService;
 
     @PostMapping("/add-room")
     public ResponseEntity<?> createRoom(
             @RequestHeader("Authorization") String token,
-            @RequestBody RoomCreationRequest request,
+            @RequestBody RoomInfo request,
             @RequestParam @Nullable List<MultipartFile> images) throws IOException {
         roomService.createRoom(token, request, images);
         return ResponseEntity.ok("Room created successfully");
@@ -41,9 +43,18 @@ public class RoomController {
     }
 
     @PutMapping("/update/{roomId}")
-    public ResponseEntity<Room> updateRoom(@RequestParam Long roomId, @RequestBody Room roomDetails) {
-        Room updatedRoom = roomService.updateRoom(roomId, roomDetails);
-        return ResponseEntity.ok(updatedRoom);
+    public ResponseEntity<Room> updateRoom(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long roomId,
+            @RequestBody RoomInfo roomInfo,
+            @RequestParam @Nullable List<MultipartFile> images) {
+        String role = jwtService.extractRoleFromToken(token);
+        if ("MANAGER".equals(role)) {
+            Room updatedRoom = roomService.updateRoom(roomId, roomInfo);
+            return ResponseEntity.ok(updatedRoom);
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden if not an ADMIN
+        }
     }
 
     @DeleteMapping("/delete/{roomId}")

@@ -47,8 +47,7 @@ public class HotelService {
         // Create and save the User
         var userRole = roleRepository.findByName("MANAGER")
                 .orElseThrow(() -> new IllegalStateException("ROLE MANAGER was not initialized"));
-//        if (userRepository.existsByEmail(request.getEmail())) {
-//            throw new IllegalStateException("Email already exists"); }
+
         var user = User.builder()
                 .fullName(request.getEmail())
                 .email(request.getEmail())
@@ -61,12 +60,6 @@ public class HotelService {
                 .build();
         userRepository.save(user);
 
-        // Create and save the Hotel
-//        Hotel hotel = new Hotel();
-//        hotel.setName(request.getHotelName());
-//        hotel.setAddress(request.getHotelAddress());
-//        hotel.setEmail(request.getEmail());
-//        hotelRepository.save(hotel);
         var hotel = Hotel.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())

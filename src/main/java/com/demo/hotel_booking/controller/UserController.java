@@ -72,7 +72,12 @@ public class UserController {
     public ResponseEntity<User> updateUser(@RequestHeader("Authorization") String token,
                                            @RequestParam("fullName") String fullName,
                                            @RequestParam("imageFile") @Nullable MultipartFile imageFile) throws IOException {
-        String imageUrl = imageUploadService.uploadImage(imageFile);
+        String imageUrl;
+        if (imageFile == null) {
+            imageUrl = "";
+        }else {
+            imageUrl = imageUploadService.uploadImage(imageFile);
+        }
         return ResponseEntity.ok(userService.updateUser(token, fullName, imageUrl));
     }
  }

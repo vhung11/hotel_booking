@@ -1,6 +1,6 @@
 package com.demo.hotel_booking.service;
 
-import com.demo.hotel_booking.dto.request.RoomCreationRequest;
+import com.demo.hotel_booking.dto.request.RoomInfo;
 import com.demo.hotel_booking.entity.Hotel;
 import com.demo.hotel_booking.entity.Room;
 import com.demo.hotel_booking.repository.RoomRepository;
@@ -29,7 +29,7 @@ public class RoomService {
         this.jwtService = jwtService;
     }
 
-    public void createRoom(String token, RoomCreationRequest request, List<MultipartFile> images) throws IOException {
+    public void createRoom(String token, RoomInfo request, List<MultipartFile> images) throws IOException {
         String email = jwtService.getEmailFromToken(token);
         Hotel hotel = hotelService.findHotelByEmail(email);
         List<String> imageUrls = imageUploadService.uploadImages(images);
@@ -56,18 +56,17 @@ public class RoomService {
         return roomRepository.findById(roomId);
     }
 
-    public Room updateRoom(Long roomId, Room roomDetails) {
+    public Room updateRoom(Long roomId, RoomInfo roomInfo) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
-        room.setDescription(roomDetails.getDescription());
-        room.setType(roomDetails.getType());
-        room.setStatus(roomDetails.getStatus());
-        room.setPrice(roomDetails.getPrice());
-        room.setNumOfAdults(roomDetails.getNumOfAdults());
-        room.setNumOfChildren(roomDetails.getNumOfChildren());
-        room.setImages(roomDetails.getImages());
-        room.setHotel(roomDetails.getHotel());
+        room.setDescription(roomInfo.getDescription());
+        room.setType(roomInfo.getType());
+        room.setPrice(roomInfo.getPrice());
+        room.setNumOfAdults(roomInfo.getNumOfAdults());
+        room.setNumOfChildren(roomInfo.getNumOfChildren());
         return roomRepository.save(room);
+
+
     }
 
     public void deleteRoom(Long roomId) {

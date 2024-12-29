@@ -18,7 +18,7 @@ public class ImageUploadService {
     private Cloudinary cloudinary;
 
     public String uploadImage(MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
+        if (file == null) {
             return "";
         }
         // Upload file to Cloudinary
