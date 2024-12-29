@@ -33,7 +33,7 @@ public class FeedbackService {
 
     public Integer save(FeedbackRequest request, Authentication connectedUser) {
         Room room = roomRepository.findById(request.roomId())
-                .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: " + request.roomId()));
+                .orElseThrow(() -> new EntityNotFoundException("No room found with ID:: " + request.roomId()));
         // User user = ((User) connectedUser.getPrincipal());
         Feedback feedback = feedbackMapper.toFeedback(request);
         return feedBackRepository.save(feedback).getId();

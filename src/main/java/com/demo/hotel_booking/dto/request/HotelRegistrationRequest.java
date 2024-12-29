@@ -1,6 +1,5 @@
 package com.demo.hotel_booking.dto.request;
 
-import com.demo.hotel_booking.entity.Coordinates;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

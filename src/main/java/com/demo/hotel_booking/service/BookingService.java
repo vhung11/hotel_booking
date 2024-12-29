@@ -1,8 +1,6 @@
 package com.demo.hotel_booking.service;
 
 import com.demo.hotel_booking.entity.BookedRoom;
-import com.demo.hotel_booking.entity.Room;
-import com.demo.hotel_booking.exception.InvalidBookingRequestException;
 import com.demo.hotel_booking.exception.ResourceNotFoundException;
 import com.demo.hotel_booking.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingService implements IBookingService {
     private final BookingRepository bookingRepository;
-    private final RoomServiceImpl roomService;
+    private final RoomService roomService;
 
 
     @Override

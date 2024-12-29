@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RoomServiceImpl implements IRoomService {
+public class RoomService {
     private final RoomRepository roomRepository;
 
     private final ImageUploadService imageUploadService;
@@ -22,14 +22,13 @@ public class RoomServiceImpl implements IRoomService {
 
     private final JwtService jwtService;
 
-    public RoomServiceImpl(RoomRepository roomRepository, ImageUploadService imageUploadService, HotelService hotelService, JwtService jwtService) {
+    public RoomService(RoomRepository roomRepository, ImageUploadService imageUploadService, HotelService hotelService, JwtService jwtService) {
         this.roomRepository = roomRepository;
         this.imageUploadService = imageUploadService;
         this.hotelService = hotelService;
         this.jwtService = jwtService;
     }
 
-    @Override
     public void createRoom(String token, RoomCreationRequest request, List<MultipartFile> images) throws IOException {
         String email = jwtService.getEmailFromToken(token);
         Hotel hotel = hotelService.findHotelByEmail(email);
@@ -48,18 +47,15 @@ public class RoomServiceImpl implements IRoomService {
         roomRepository.save(room);
     }
 
-    @Override
     public List<Room> getAllRooms(String token) {
         Hotel hotel = hotelService.findHotelByEmail(jwtService.getEmailFromToken(token));
         return roomRepository.findAll().stream().filter(room -> room.getHotel().getId().equals(hotel.getId())).toList();
     }
 
-    @Override
     public Optional<Room> getRoomById(Long roomId) {
         return roomRepository.findById(roomId);
     }
 
-    @Override
     public Room updateRoom(Long roomId, Room roomDetails) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));
@@ -74,7 +70,6 @@ public class RoomServiceImpl implements IRoomService {
         return roomRepository.save(room);
     }
 
-    @Override
     public void deleteRoom(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found"));

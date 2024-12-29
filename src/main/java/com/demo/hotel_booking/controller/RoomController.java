@@ -2,8 +2,7 @@ package com.demo.hotel_booking.controller;
 
 import com.demo.hotel_booking.dto.request.RoomCreationRequest;
 import com.demo.hotel_booking.entity.Room;
-import com.demo.hotel_booking.service.IRoomService;
-import com.demo.hotel_booking.service.RoomServiceImpl;
+import com.demo.hotel_booking.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -20,35 +18,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/manager/rooms")
 public class RoomController {
-    private final IRoomService roomService;
+    private final RoomService roomService;
 
     @PostMapping("/add-room")
     public ResponseEntity<?> createRoom(
             @RequestHeader("Authorization") String token,
-            @RequestParam String roomNumber,
-            @RequestParam String description,
-            @RequestParam String type,
-            @RequestParam BigDecimal price,
-            @RequestParam int numOfAdults,
-            @RequestParam int numOfChildren,
-            @RequestParam List<String> amenities,
+            @RequestBody RoomCreationRequest request,
             @RequestParam @Nullable List<MultipartFile> images) throws IOException {
-        RoomCreationRequest request = new RoomCreationRequest();
-        request.setRoomNumber(roomNumber);
-        request.setDescription(description);
-        request.setType(type);
-        request.setPrice(price);
-        request.setNumOfAdults(numOfAdults);
-        request.setNumOfChildren(numOfChildren);
-        request.setAmenities(amenities);
         roomService.createRoom(token, request, images);
         return ResponseEntity.ok("Room created successfully");
     }
 
     @GetMapping("/all-rooms")
-    public ResponseEntity<List<Room>> getAllRooms(@RequestParam String token) {
-        List<Room> rooms = roomService.getAllRooms(token);
-        return ResponseEntity.ok(rooms);
+    public ResponseEntity<List<Room>> getAllRooms(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(roomService.getAllRooms(token));
     }
 
     @GetMapping("/rooms/{roomId}")
@@ -58,7 +41,7 @@ public class RoomController {
     }
 
     @PutMapping("/update/{roomId}")
-    public ResponseEntity<Room> updateRoom(@PathVariable Long roomId, @RequestBody Room roomDetails) {
+    public ResponseEntity<Room> updateRoom(@RequestParam Long roomId, @RequestBody Room roomDetails) {
         Room updatedRoom = roomService.updateRoom(roomId, roomDetails);
         return ResponseEntity.ok(updatedRoom);
     }

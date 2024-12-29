@@ -7,7 +7,7 @@ import com.demo.hotel_booking.entity.Room;
 import com.demo.hotel_booking.exception.InvalidBookingRequestException;
 import com.demo.hotel_booking.exception.ResourceNotFoundException;
 import com.demo.hotel_booking.service.IBookingService;
-import com.demo.hotel_booking.service.RoomServiceImpl;
+import com.demo.hotel_booking.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/bookings")
 public class BookingController {
     private final IBookingService bookingService;
-    private final RoomServiceImpl roomService;
+    private final RoomService roomService;
 
     @GetMapping("/all-bookings")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
