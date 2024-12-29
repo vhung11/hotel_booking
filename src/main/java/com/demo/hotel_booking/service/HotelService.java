@@ -62,7 +62,7 @@ public class HotelService {
 
         var hotel = Hotel.builder()
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .province(request.getProvince())
                 .district(request.getDistrict())

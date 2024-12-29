@@ -34,7 +34,7 @@ public class Room {
     private List<String> amenities;
 
     @ElementCollection
-    private List<String> images;
+    private List<String> imageUrls;
 
     @ManyToOne()
     @JoinColumn(name = "hotel_id")

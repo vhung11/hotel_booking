@@ -19,6 +19,5 @@ public class RoomInfo {
     private int numOfAdults;
     private int numOfChildren;
     private List<String> amenities;
-
-    //private List<MultipartFile> images;
+    private List<String> imageUrls;
 }

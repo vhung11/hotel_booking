@@ -29,10 +29,15 @@ public class RoomService {
         this.jwtService = jwtService;
     }
 
-    public void createRoom(String token, RoomInfo request, List<MultipartFile> images) throws IOException {
-        String email = jwtService.getEmailFromToken(token);
+    public void createRoom(String token, RoomInfo request) throws IOException {
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid token format");
+        }
+
+        String jwt = token.substring(7);
+        String email = jwtService.getEmailFromToken(jwt);
         Hotel hotel = hotelService.findHotelByEmail(email);
-        List<String> imageUrls = imageUploadService.uploadImages(images);
+        //List<String> imageUrls = imageUploadService.uploadImages(images);
         var room = Room.builder()
                 .roomNumber(request.getRoomNumber())
                 .description(request.getDescription())
@@ -42,7 +47,7 @@ public class RoomService {
                 .numOfChildren(request.getNumOfChildren())
                 .hotel(hotel)
                 .amenities(request.getAmenities())
-                .images(imageUrls)
+                .imageUrls(request.getImageUrls())
                 .build();
         roomRepository.save(room);
     }

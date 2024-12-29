@@ -4,8 +4,10 @@ import com.demo.hotel_booking.dto.request.RoomInfo;
 import com.demo.hotel_booking.entity.Room;
 import com.demo.hotel_booking.security.JwtService;
 import com.demo.hotel_booking.service.RoomService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -14,21 +16,28 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/manager/rooms")
+@RequestMapping("/v3/api-docs/rooms")
 public class RoomController {
-    private final RoomService roomService;
-    private final JwtService jwtService;
+    @Autowired
+    private RoomService roomService;
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/add-room")
     public ResponseEntity<?> createRoom(
             @RequestHeader("Authorization") String token,
-            @RequestBody RoomInfo request,
-            @RequestParam @Nullable List<MultipartFile> images) throws IOException {
-        roomService.createRoom(token, request, images);
-        return ResponseEntity.ok("Room created successfully");
+            @RequestBody RoomInfo request) throws IOException {
+        String role = jwtService.extractRoleFromToken(token);
+        if ("MANAGER".equals(role)) {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            RoomInfo roomInfo = objectMapper.readValue(request, RoomInfo.class);
+            roomService.createRoom(token, request);
+            return ResponseEntity.ok("Room created successfully");
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden if not an ADMIN
+        }
+
     }
 
     @GetMapping("/all-rooms")
