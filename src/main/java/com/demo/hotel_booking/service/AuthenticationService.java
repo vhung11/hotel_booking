@@ -45,6 +45,7 @@ public class AuthenticationService {
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .imageUrl("")
                 .accountLocked(false)
                 .verificationCode(generateVerificationCode())
                 .verificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15))
@@ -73,11 +74,6 @@ public class AuthenticationService {
         var user = ((User)auth.getPrincipal());
         claims.put("fullName", user.getFullName());
         var jwtToken = jwtService.generateToken(claims, user);
-        Token token = Token.builder()
-                .token(jwtToken)
-                .user(user)
-                .build();
-        tokenRepository.save(token);
         return AuthenticationResponse.builder()
                 .token(jwtToken).build();
     }

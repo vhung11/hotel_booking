@@ -78,10 +78,11 @@ public class BookingController {
 
     private BookingResponse getBookingResponse(BookedRoom booking) {
         Room theRoom = roomService.getRoomById(booking.getRoom().getId()).get();
-        RoomResponse room = new RoomResponse(
-                theRoom.getId(),
-                theRoom.getType(),
-                theRoom.getPrice());
+        var room = RoomResponse.builder()
+                .id(booking.getRoom().getId())
+                .roomPrice(booking.getRoom().getPrice())
+                .roomType(theRoom.getType())
+                .build();
         return new BookingResponse(
                 booking.getBookingId(), booking.getCheckInDate(),
                 booking.getCheckOutDate(),booking.getGuestFullName(),

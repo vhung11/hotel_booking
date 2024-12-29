@@ -10,11 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class RoomServiceImpl implements RoomService {
+public class RoomServiceImpl implements IRoomService {
     private final RoomRepository roomRepository;
 
     private final ImageUploadService imageUploadService;
@@ -31,25 +30,22 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room createRoom(RoomCreationRequest roomRequest, MultipartFile file) throws IOException {
-        Hotel hotel = hotelService.findHotelByEmail(jwtService.getEmailFromToken(roomRequest.getToken()));
-        Room room = Room.builder()
-                .roomNumber(roomRequest.getRoomNumber())
-                .description(roomRequest.getDescription())
-                .type(roomRequest.getType())
-                .status(roomRequest.getStatus())
-                .price(roomRequest.getPrice())
-                .numOfAdults(roomRequest.getNumOfAdults())
-                .numOfChildren(roomRequest.getNumOfChildren())
+    public void createRoom(String token, RoomCreationRequest request, List<MultipartFile> images) throws IOException {
+        String email = jwtService.getEmailFromToken(token);
+        Hotel hotel = hotelService.findHotelByEmail(email);
+        List<String> imageUrls = imageUploadService.uploadImages(images);
+        var room = Room.builder()
+                .roomNumber(request.getRoomNumber())
+                .description(request.getDescription())
+                .type(request.getType())
+                .price(request.getPrice())
+                .numOfAdults(request.getNumOfAdults())
+                .numOfChildren(request.getNumOfChildren())
                 .hotel(hotel)
+                .amenities(request.getAmenities())
+                .images(imageUrls)
                 .build();
-
-        if (file != null && !file.isEmpty()) {
-            Map uploadResult = imageUploadService.uploadImage(file);
-            String imageUrl = (String) uploadResult.get("url");
-            room.getImages().add(imageUrl);
-        }
-        return roomRepository.save(room);
+        roomRepository.save(room);
     }
 
     @Override

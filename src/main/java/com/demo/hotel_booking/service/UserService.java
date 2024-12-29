@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -25,6 +27,7 @@ public class UserService {
     @Autowired
     private final JwtService jwtService;
     private final EmailService emailService;
+    private ImageUploadService imageUploadService;
 
 
     public void deleteUserById(Integer userId) {
@@ -112,5 +115,36 @@ public class UserService {
         Random random = new Random();
         int code = random.nextInt(900000) + 100000;
         return String.valueOf(code);
+    }
+
+    public User getUserData(String token) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid token format");
+        }
+
+        // Loại bỏ tiền tố "Bearer "
+        String jwt = token.substring(7);
+
+        // Trích xuất email từ JWT
+        String email = jwtService.getEmailFromToken(jwt);
+
+        // Tìm người dùng từ cơ sở dữ liệu
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    }
+
+    public User updateUser(String token, String fullName, String imageUrl) throws IOException {
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid token format");
+        }
+
+        String jwt = token.substring(7);
+        String email = jwtService.getEmailFromToken(jwt);
+        User user = userRepository.findByEmail(email).get();
+        user.setFullName(fullName);
+        if (!Objects.equals(imageUrl, "")) {
+            user.setImageUrl(imageUrl);
+        }
+        return userRepository.save(user);
     }
 }

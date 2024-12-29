@@ -31,9 +31,9 @@ public class HotelService {
         this.hotelRepository = hotelRepository;
     }
 
-    public List<Hotel> findHotelsWithAvailableRooms(String address, LocalDate checkInDate, LocalDate checkOutDate, int numOfAdults, int numOfChildren) {
-        return hotelRepository.findHotelsWithAvailableRooms(address, checkInDate, checkOutDate, numOfAdults, numOfChildren);
-    }
+//    public List<Hotel> findHotelsWithAvailableRooms(String address, LocalDate checkInDate, LocalDate checkOutDate, int numOfAdults, int numOfChildren) {
+//        return hotelRepository.findHotelsWithAvailableRooms(address, checkInDate, checkOutDate, numOfAdults, numOfChildren);
+//    }
 
     public List<Room> findAvailableRooms(Long hotelId, LocalDate checkInDate, LocalDate checkOutDate, int numOfAdults, int numOfChildren) {
         return hotelRepository.findAvailableRooms(hotelId, checkInDate, checkOutDate, numOfAdults, numOfChildren);
@@ -47,8 +47,8 @@ public class HotelService {
         // Create and save the User
         var userRole = roleRepository.findByName("MANAGER")
                 .orElseThrow(() -> new IllegalStateException("ROLE MANAGER was not initialized"));
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalStateException("Email already exists"); }
+//        if (userRepository.existsByEmail(request.getEmail())) {
+//            throw new IllegalStateException("Email already exists"); }
         var user = User.builder()
                 .fullName(request.getEmail())
                 .email(request.getEmail())
@@ -62,10 +62,22 @@ public class HotelService {
         userRepository.save(user);
 
         // Create and save the Hotel
-        Hotel hotel = new Hotel();
-        hotel.setName(request.getHotelName());
-        hotel.setAddress(request.getHotelAddress());
-        hotel.setEmail(request.getEmail());
+//        Hotel hotel = new Hotel();
+//        hotel.setName(request.getHotelName());
+//        hotel.setAddress(request.getHotelAddress());
+//        hotel.setEmail(request.getEmail());
+//        hotelRepository.save(hotel);
+        var hotel = Hotel.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .name(request.getName())
+                .province(request.getProvince())
+                .district(request.getDistrict())
+                .ward(request.getWard())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .type(request.getType())
+                .build();
         hotelRepository.save(hotel);
     }
 

@@ -35,9 +35,6 @@ public class FeedbackService {
         Room room = roomRepository.findById(request.roomId())
                 .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: " + request.roomId()));
         // User user = ((User) connectedUser.getPrincipal());
-        if (Objects.equals(room.getCreatedBy(), connectedUser.getName())) {
-            throw new OperationNotPermittedException("You cannot give feedback to your own book");
-        }
         Feedback feedback = feedbackMapper.toFeedback(request);
         return feedBackRepository.save(feedback).getId();
     }

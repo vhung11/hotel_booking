@@ -36,7 +36,7 @@ public class JwtService {
                 .parser()
                 .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 
@@ -75,9 +75,9 @@ public class JwtService {
     public String getEmailFromToken(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(getSignInKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }

@@ -2,8 +2,10 @@ package com.demo.hotel_booking.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,10 +15,11 @@ import java.math.BigDecimal;
 public class RoomCreationRequest {
     private String roomNumber;
     private String description;
-    private Integer type;
-    private Boolean status;
+    private String type;
     private BigDecimal price;
     private int numOfAdults;
     private int numOfChildren;
-    private String token;
+    private List<String> amenities;
+
+    //private List<MultipartFile> images;
 }

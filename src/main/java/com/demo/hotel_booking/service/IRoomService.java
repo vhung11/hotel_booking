@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public interface RoomService {
-    Room createRoom(RoomCreationRequest room, MultipartFile file) throws IOException;
+public interface IRoomService {
+    void createRoom(String token, RoomCreationRequest room, List<MultipartFile> file) throws IOException;
     List<Room> getAllRooms(String token);
     Optional<Room> getRoomById(Long roomId);
     Room updateRoom(Long roomId, Room roomDetails);

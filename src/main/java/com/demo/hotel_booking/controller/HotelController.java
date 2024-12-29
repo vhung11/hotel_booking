@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hotels")
+@RequestMapping("/manager/hotels")
 public class HotelController {
 
     private final HotelService hotelService;
@@ -21,15 +21,15 @@ public class HotelController {
         this.hotelService = hotelService;
     }
 
-    @GetMapping("/available-hotels")
-    public ResponseEntity<List<Hotel>> searchHotels(@RequestParam String address,
-                                                    @RequestParam LocalDate checkInDate,
-                                                    @RequestParam LocalDate checkOutDate,
-                                                    @RequestParam int numOfAdults,
-                                                    @RequestParam int numOfChildren) {
-        List<Hotel> availableHotels = hotelService.findHotelsWithAvailableRooms(address, checkInDate, checkOutDate, numOfAdults, numOfChildren);
-        return ResponseEntity.ok(availableHotels);
-    }
+//    @GetMapping("/available-hotels")
+//    public ResponseEntity<List<Hotel>> searchHotels(@RequestParam String address,
+//                                                    @RequestParam LocalDate checkInDate,
+//                                                    @RequestParam LocalDate checkOutDate,
+//                                                    @RequestParam int numOfAdults,
+//                                                    @RequestParam int numOfChildren) {
+//        List<Hotel> availableHotels = hotelService.findHotelsWithAvailableRooms(address, checkInDate, checkOutDate, numOfAdults, numOfChildren);
+//        return ResponseEntity.ok(availableHotels);
+//    }
 
     @GetMapping("/{hotelId}/available-rooms")
     public ResponseEntity<List<Room>> getAvailableRooms(
