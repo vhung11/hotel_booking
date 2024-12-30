@@ -4,20 +4,14 @@ import com.demo.hotel_booking.dto.request.RoomInfo;
 import com.demo.hotel_booking.entity.Room;
 import com.demo.hotel_booking.security.JwtService;
 import com.demo.hotel_booking.service.RoomService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v3/api-docs/rooms")
+@RequestMapping("/manager/rooms")
 public class RoomController {
     @Autowired
     private RoomService roomService;
@@ -25,13 +19,9 @@ public class RoomController {
     private JwtService jwtService;
 
     @PostMapping("/add-room")
-    public ResponseEntity<?> createRoom(
-            @RequestHeader("Authorization") String token,
-            @RequestBody RoomInfo request) throws IOException {
-        String role = jwtService.extractRoleFromToken(token);
+    public ResponseEntity<?> createRoom(@RequestHeader("Authorization") String token, @RequestBody RoomInfo request) {
+        String role = jwtService.extractRoleFromToken(token.substring(7));
         if ("MANAGER".equals(role)) {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            RoomInfo roomInfo = objectMapper.readValue(request, RoomInfo.class);
             roomService.createRoom(token, request);
             return ResponseEntity.ok("Room created successfully");
         } else {
@@ -41,34 +31,39 @@ public class RoomController {
     }
 
     @GetMapping("/all-rooms")
-    public ResponseEntity<List<Room>> getAllRooms(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<RoomInfo>> getAllRooms(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(roomService.getAllRooms(token));
     }
 
-    @GetMapping("/rooms/{roomId}")
+    @GetMapping("/get-room/{roomId}")
     public ResponseEntity<Room> getRoomById(@PathVariable Long roomId) {
         Room room = roomService.getRoomById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
         return ResponseEntity.ok(room);
     }
 
     @PutMapping("/update/{roomId}")
-    public ResponseEntity<Room> updateRoom(
+    public ResponseEntity<?> updateRoom(
             @RequestHeader("Authorization") String token,
             @PathVariable Long roomId,
-            @RequestBody RoomInfo roomInfo,
-            @RequestParam @Nullable List<MultipartFile> images) {
-        String role = jwtService.extractRoleFromToken(token);
+            @RequestBody RoomInfo roomInfo) {
+        String role = jwtService.extractRoleFromToken(token.substring(7));
         if ("MANAGER".equals(role)) {
-            Room updatedRoom = roomService.updateRoom(roomId, roomInfo);
-            return ResponseEntity.ok(updatedRoom);
+            roomService.updateRoom(roomId, roomInfo);
+            return ResponseEntity.ok("Room updated successfully");
         } else {
             return ResponseEntity.status(403).build(); // Forbidden if not an ADMIN
         }
     }
 
     @DeleteMapping("/delete/{roomId}")
-    public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId) {
-        roomService.deleteRoom(roomId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteRoom(@RequestHeader("Authorization") String token,
+                                        @PathVariable Long roomId) {
+        String role = jwtService.extractRoleFromToken(token.substring(7));
+        if ("MANAGER".equals(role)) {
+            roomService.deleteRoom(token, roomId);
+            return ResponseEntity.ok("Rom deleted successfully");
+        } else {
+            return ResponseEntity.status(403).build(); // Forbidden if not an ADMIN
+        }
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
@@ -30,4 +31,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
                                   @Param("checkOutDate") LocalDate checkOutDate,
                                   @Param("numOfAdults") int numOfAdults,
                                   @Param("numOfChildren") int numOfChildren);
+
+    Optional<Hotel> findByEmail(String email);
 }

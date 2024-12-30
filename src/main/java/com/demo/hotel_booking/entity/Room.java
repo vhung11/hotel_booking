@@ -3,14 +3,8 @@ package com.demo.hotel_booking.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +20,7 @@ public class Room {
     private String roomNumber;
     private String description;
     private String type;
-    private Boolean status;
+    private Boolean available;
     private BigDecimal price;
     private int numOfAdults;
     private int numOfChildren;

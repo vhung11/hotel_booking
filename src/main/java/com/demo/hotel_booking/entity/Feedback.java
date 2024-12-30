@@ -28,7 +28,7 @@ public class Feedback {
     private Double note;
     private String comment;
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @CreatedDate

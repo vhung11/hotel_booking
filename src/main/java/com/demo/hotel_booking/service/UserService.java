@@ -133,7 +133,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
     }
 
-    public User updateUser(String token, String fullName, String imageUrl) throws IOException {
+    public User updateUser(String token, String fullName, String imageUrl) {
         if (token == null || !token.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Invalid token format");
         }
